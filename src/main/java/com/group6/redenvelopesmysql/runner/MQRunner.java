@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
  * @author Yang Xichun
  * @date 2021/11/12 22:55
  */
-public class MqRunner implements CommandLineRunner {
+public class MQRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {

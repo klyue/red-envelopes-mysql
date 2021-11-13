@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "envelope")
-public class Envelope {
+public class RedEnvelope {
     @Id
     @Column(name = "eid")
     private int eid;

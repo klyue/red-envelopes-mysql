@@ -8,7 +8,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "user")
-public class User {
+public class Wallet {
 
     @Id
     @Column(name = "uid")
