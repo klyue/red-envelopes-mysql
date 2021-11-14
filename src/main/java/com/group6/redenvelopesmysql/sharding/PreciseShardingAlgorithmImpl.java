@@ -15,7 +15,7 @@ public class PreciseShardingAlgorithmImpl implements PreciseShardingAlgorithm<In
     public String doSharding(Collection<String> collection, PreciseShardingValue<Integer> preciseShardingValue) {
         String dbName = "ds";
         Integer value = preciseShardingValue.getValue();
-        dbName += value;
+        dbName += (value % 2);
         for (String each : collection) {
             if (each.equals(dbName)) {
                 return each;

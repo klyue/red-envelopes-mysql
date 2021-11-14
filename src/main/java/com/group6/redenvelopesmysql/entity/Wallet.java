@@ -7,7 +7,7 @@ import javax.persistence.*;
  * @date 2021/11/12 22:32
  */
 @Entity
-@Table(name = "user")
+@Table(name = "wallet")
 public class Wallet {
 
     @Id

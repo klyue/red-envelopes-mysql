@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * @date 2021/11/12 22:35
  */
 @Entity
-@Table(name = "envelope")
+@Table(name = "red_envelope")
 public class RedEnvelope {
     @Id
     @Column(name = "eid")

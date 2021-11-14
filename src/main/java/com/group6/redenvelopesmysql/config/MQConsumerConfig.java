@@ -1,6 +1,6 @@
 package com.group6.redenvelopesmysql.config;
 
-import com.group6.redenvelopesmysql.runner.MQConsumerMSgListenerProcessor;
+import com.group6.redenvelopesmysql.mq.MQConsumerMsgListenerProcessor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Yang Xichun
@@ -26,16 +25,22 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "rocketmq.consumer")
 @Slf4j
 public class MQConsumerConfig {
+
     private String groupName;
+
     private String namesrvAddr;
+
     private String topics;
+
     // 消费者线程数据量
     private Integer consumeThreadMin;
+
     private Integer consumeThreadMax;
+
     private Integer consumeMessageBatchMaxSize;
 
     @Autowired
-    private MQConsumerMSgListenerProcessor consumerMSgListenerProcessor;
+    private MQConsumerMsgListenerProcessor consumerMsgListenerProcessor;
 
     @Bean
     @ConditionalOnProperty(prefix = "rocketmq.consumer", value = "isOnOff", havingValue = "on")
@@ -46,7 +51,7 @@ public class MQConsumerConfig {
         consumer.setConsumeThreadMin(consumeThreadMin);
         consumer.setConsumeThreadMax(consumeThreadMax);
         consumer.setConsumeMessageBatchMaxSize(consumeMessageBatchMaxSize);
-        consumer.registerMessageListener(consumerMSgListenerProcessor);
+        consumer.registerMessageListener(consumerMsgListenerProcessor);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 
         try {
@@ -58,7 +63,7 @@ public class MQConsumerConfig {
             consumer.start();
             log.info("defaultConsumer 创建成功, groupName={}, topics={}, namesrvAddr={}",groupName, topics, namesrvAddr);
         } catch (MQClientException e) {
-            log.error("defaultConsumer 创建失败！")；
+            log.error("defaultConsumer 创建失败！");
         }
 
         return consumer;
