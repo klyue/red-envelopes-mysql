@@ -54,8 +54,6 @@ public class MQConsumerConfig {
     @ConditionalOnProperty(prefix = "rocketmq.consumer", value = "isOnOff", havingValue = "on")
     public DefaultMQPushConsumer defaultConsumer() throws MQClientException {
         log.info("defaultConsumer 正在创建------------------------------------------");
-        log.info(accessKey);
-        log.info(secretKey);
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(null, groupName,
                 new AclClientRPCHook(new SessionCredentials(accessKey, secretKey)));
         consumer.setNamesrvAddr(namesrvAddr);
