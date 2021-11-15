@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.acl.common.AclClientRPCHook;
+import org.apache.rocketmq.acl.common.SessionCredentials;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -41,6 +43,10 @@ public class MQConsumerConfig {
 
     private Integer consumeMessageBatchMaxSize;
 
+    private String accessKey;
+
+    private String secretKey;
+
     @Autowired
     private MQConsumerMsgListenerProcessor consumerMsgListenerProcessor;
 
@@ -48,7 +54,10 @@ public class MQConsumerConfig {
     @ConditionalOnProperty(prefix = "rocketmq.consumer", value = "isOnOff", havingValue = "on")
     public DefaultMQPushConsumer defaultConsumer() throws MQClientException {
         log.info("defaultConsumer 正在创建------------------------------------------");
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
+        log.info(accessKey);
+        log.info(secretKey);
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(null, groupName,
+                new AclClientRPCHook(new SessionCredentials(accessKey, secretKey)));
         consumer.setNamesrvAddr(namesrvAddr);
         consumer.setConsumeThreadMin(consumeThreadMin);
         consumer.setConsumeThreadMax(consumeThreadMax);
