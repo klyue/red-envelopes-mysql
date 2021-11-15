@@ -12,10 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface WalletRepository extends CrudRepository<Wallet, Integer> {
 
-//    @Transactional
-//    @Modifying
-//    @Query("update Wallet w set w.balance = w.balance + ?1 where w.uid = ?2")
-//    int updateBalance(int newBalance, int uid);
-
     Wallet findByUid(int uid);
+
 }

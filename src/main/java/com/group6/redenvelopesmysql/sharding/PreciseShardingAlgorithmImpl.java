@@ -6,6 +6,8 @@ import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 import java.util.Collection;
 
 /**
+ * 分库算法，分库规则在这里指定
+ *
  * @author Yang Xichun
  * @date 2021/11/12 22:59
  */

@@ -18,9 +18,4 @@ public interface RedEnvelopeRepository extends CrudRepository<RedEnvelope, Integ
 
     List<RedEnvelope> findByUid(int uid);
 
-//    @Transactional
-//    @Modifying
-//    @Query(value = "update ds1.red_envelop1 e set e.opened = ?1 where e.eid = ?2", nativeQuery = true)
-//    int updateOpened(boolean opened, int eid);
-
 }

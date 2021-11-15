@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * 红包的相关操作，有的操作还和钱包有关
+ *
  * @author Yang Xichun
  * @date 2021/11/14 17:01
  */
@@ -32,10 +34,6 @@ public class RedEnvelopesService {
 
     @Transactional
     public boolean update(int eid, int uid, int value) {
-//        int n1 = redEnvelopeRepository.updateOpened(true, eid);
-//        int n2 = walletRepository.updateBalance(value, uid);
-//        log.info("n1: {}, n2: {}", n1, n2);
-
         Wallet wallet = walletRepository.findByUid(uid);
         RedEnvelope redEnvelope = redEnvelopeRepository.findByEid(eid);
         if (wallet == null) {

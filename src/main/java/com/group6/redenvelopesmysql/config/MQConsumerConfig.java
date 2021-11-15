@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 消息队列消费者配置
+ *
  * @author Yang Xichun
  * @date 2021/11/13 23:23
  */

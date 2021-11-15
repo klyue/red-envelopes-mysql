@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * 消费消息队列中的消息的处理器
+ *
  * @author Yang Xichun
  * @date 2021/11/14 0:04
  */
@@ -51,8 +53,6 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrent
             return ConsumeConcurrentlyStatus.RECONSUME_LATER;
         }
 
-        // TODO 消费消息队列中的消息并写入数据，写入失败则删除 Redis 缓存中的相应数据
-
         ObjectMapper mapper = new ObjectMapper();
         if (tags.equals("insert")) {
             InsertMessage insertMessage;
@@ -62,6 +62,7 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrent
                 log.error("JSON 解析失败：{}", e.getMessage());
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
+
             RedEnvelope redEnvelope = new RedEnvelope();
             redEnvelope.setEid(insertMessage.getE());
             redEnvelope.setUid(insertMessage.getU());

@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * update 消息对象
+ *
  * @author Yang Xichun
  * @date 2021/11/14 16:23
  */
@@ -14,17 +16,17 @@ import lombok.ToString;
 public class UpdateMessage {
 
     /**
-     * eid
+     * eid，红包 ID
      */
     private int e;
 
     /**
-     * uid
+     * uid，用户 ID
      */
     private int u;
 
     /**
-     * value
+     * value，红包金额
      */
     private int v;
 
