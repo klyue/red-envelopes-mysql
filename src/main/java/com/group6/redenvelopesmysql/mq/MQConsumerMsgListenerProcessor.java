@@ -6,10 +6,9 @@ import com.group6.redenvelopesmysql.mq.data.InsertMessage;
 import com.group6.redenvelopesmysql.mq.data.UpdateMessage;
 import com.group6.redenvelopesmysql.service.RedEnvelopesService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import org.apache.rocketmq.client.consumer.listener.*;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.common.protocol.body.ConsumeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,16 +22,16 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrently {
+public class MQConsumerMsgListenerProcessor implements MessageListenerOrderly {
 
     @Autowired
     private RedEnvelopesService redEnvelopesService;
 
     @Override
-    public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+    public ConsumeOrderlyStatus consumeMessage(List<MessageExt> list, ConsumeOrderlyContext consumeConcurrentlyContext) {
         if (list.size() == 0) {
             log.info("MQ 接收消息为空，直接返回成功");
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            return ConsumeOrderlyStatus.SUCCESS;
         }
         MessageExt messageExt = list.get(0);
         log.info("MQ 接收到的消息为：{}" + messageExt.toString());
@@ -47,7 +46,7 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrent
             log.info("MQ 消息 topic={}, tags={}, 消息内容={}", topic, tags, body);
         } catch (Exception e) {
             log.error("获取 MQ 消息内容异常：{}", e.getMessage());
-            return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -57,7 +56,7 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrent
                 insertMessage = mapper.readValue(body, InsertMessage.class);
             } catch (Exception e) {
                 log.error("JSON 解析失败：{}", e.getMessage());
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
             }
 
             RedEnvelope redEnvelope = new RedEnvelope();
@@ -74,12 +73,12 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerConcurrent
                 updateMessage = mapper.readValue(body, UpdateMessage.class);
             } catch (Exception e) {
                 log.error("JSON 解析失败：{}", e.getMessage());
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
             }
 
             redEnvelopesService.update(updateMessage.getE(), updateMessage.getU(), updateMessage.getV());
         }
 
-        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
     }
 }
