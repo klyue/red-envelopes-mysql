@@ -34,11 +34,11 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerOrderly {
             return ConsumeOrderlyStatus.SUCCESS;
         }
         MessageExt messageExt = list.get(0);
-        log.info("MQ 接收到的消息为：{}" + messageExt.toString());
+        log.info("从 MQ 接收到的消息为：{}" + messageExt.toString());
 
         String topic;
-        String tags = "insert";
-        String body = "";
+        String tags;
+        String body;
         try {
             topic = messageExt.getTopic();
             tags = messageExt.getTags();
@@ -79,6 +79,6 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerOrderly {
             redEnvelopesService.update(updateMessage.getE(), updateMessage.getU(), updateMessage.getV());
         }
 
-        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+        return ConsumeOrderlyStatus.SUCCESS;
     }
 }
