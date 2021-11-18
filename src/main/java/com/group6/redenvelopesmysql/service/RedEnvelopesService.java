@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 红包的相关操作，有的操作还和钱包有关
  *
@@ -25,27 +27,39 @@ public class RedEnvelopesService {
     @Autowired
     private RedEnvelopeRepository redEnvelopeRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public Wallet findWallet(int uid) {
+        return walletRepository.findById(uid).get();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RedEnvelope> findRedEnvelopes(int uid) {
+        return redEnvelopeRepository.findByUid(uid);
+    }
+
+    @Transactional(rollbackFor={RuntimeException.class, Exception.class})
     public boolean insert(RedEnvelope redEnvelope) {
         redEnvelopeRepository.save(redEnvelope);
 
         return true;
     }
 
-    @Transactional
+    @Transactional(rollbackFor={RuntimeException.class, Exception.class})
     public boolean update(int eid, int uid, int value) {
         Wallet wallet = walletRepository.findByUid(uid);
         RedEnvelope redEnvelope = redEnvelopeRepository.findByEid(eid);
         if (wallet == null) {
-            log.info("wallet null");
+            log.warn("更新时没有找到对应 uid 的钱包：{}", uid);
+            return false;
         }
         if (redEnvelope == null) {
-            log.info("redEnvelope null");
+            log.warn("更新时没有找到对应 eid 的红包：{}", eid);
+            return false;
         }
         wallet.setBalance(wallet.getBalance() + value);
         redEnvelope.setOpened(true);
-        walletRepository.save(wallet);
         redEnvelopeRepository.save(redEnvelope);
+        walletRepository.save(wallet);
 
         return true;
     }

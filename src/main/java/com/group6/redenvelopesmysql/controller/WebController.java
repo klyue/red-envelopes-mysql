@@ -4,6 +4,7 @@ import com.group6.redenvelopesmysql.entity.RedEnvelope;
 import com.group6.redenvelopesmysql.entity.Wallet;
 import com.group6.redenvelopesmysql.repository.RedEnvelopeRepository;
 import com.group6.redenvelopesmysql.repository.WalletRepository;
+import com.group6.redenvelopesmysql.service.RedEnvelopesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,15 +22,12 @@ import java.util.Map;
 public class WebController {
 
     @Autowired
-    private WalletRepository walletRepository;
-
-    @Autowired
-    private RedEnvelopeRepository redEnvelopeRepository;
+    private RedEnvelopesService redEnvelopesService;
 
     @PostMapping(value = "/wallet/{id}")
     public Map<String, Object> getWallet(@PathVariable("id") int id) {
-        Wallet wallet = walletRepository.findById(id).get();
-        List<RedEnvelope> redEnvelopes = redEnvelopeRepository.findByUid(id);
+        Wallet wallet = redEnvelopesService.findWallet(id);
+        List<RedEnvelope> redEnvelopes = redEnvelopesService.findRedEnvelopes(id);
 
         Map<String, Object> res = new HashMap<>();
         res.put("wallet", wallet);
