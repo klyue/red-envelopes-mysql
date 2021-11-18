@@ -49,11 +49,11 @@ public class RedEnvelopesService {
         Wallet wallet = walletRepository.findByUid(uid);
         RedEnvelope redEnvelope = redEnvelopeRepository.findByEid(eid);
         if (wallet == null) {
-            log.warn("更新时没有找到对应 uid 的钱包：{}", uid);
+            log.error("更新时没有找到对应 uid 的钱包：{}", uid);
             return false;
         }
         if (redEnvelope == null) {
-            log.warn("更新时没有找到对应 eid 的红包：{}", eid);
+            log.error("更新时没有找到对应 eid 的红包：{}", eid);
             return false;
         }
         wallet.setBalance(wallet.getBalance() + value);

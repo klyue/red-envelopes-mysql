@@ -69,7 +69,7 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerOrderly {
             try {
                 redEnvelopesService.insert(redEnvelope);
             } catch (Exception e) {
-                log.info("插入红包数据时出现异常，将重新消费该消息：{}", e.getMessage());
+                log.error("插入红包数据时出现异常，将重新消费该消息：{}", e.getMessage());
                 return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
             }
         } else if (tags.equals("update")) {
@@ -85,12 +85,12 @@ public class MQConsumerMsgListenerProcessor implements MessageListenerOrderly {
             try {
                 updateSuccess = redEnvelopesService.update(updateMessage.getE(), updateMessage.getU(), updateMessage.getV());
             } catch (Exception e) {
-                log.info("更新红包数据时出现异常，将重新消费该消息：{}", e.getMessage());
+                log.error("更新红包数据时出现异常，将重新消费该消息：{}", e.getMessage());
                 return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
             }
 
             if (!updateSuccess) {
-                log.info("此更新消息数据有误或者生产/消费顺序出现错误，将重新消费该消息：{}", body);
+                log.error("此更新消息数据有误或者生产/消费顺序出现错误，将重新消费该消息：{}", body);
                 return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
             }
         }
